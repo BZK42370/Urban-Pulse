@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Pulse - Tableau de bord</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background-color: #f2f5f7;
+        color: #4a4a4a;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #004c6d;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .user-info {
+        background-color: #e9ecef;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+      .user-id-container {
+        word-wrap: break-word;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #333;
+        margin-top: 0.5rem;
+      }
+      h2 {
+        color: #004c6d;
+        margin-bottom: 1rem;
+      }
+      #subscribers-list {
+        list-style: none;
+        padding: 0;
+      }
+      #subscribers-list li {
+        background-color: #eef2f5;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tableau de bord - Urban Pulse</h1>
+
+      <div class="user-info">
+        <p><strong>Votre rôle :</strong> Administrateur</p>
+        <p><strong>Votre identifiant (ID utilisateur) :</strong></p>
+        <div id="user-id" class="user-id-container">Chargement...</div>
+      </div>
+
+      <h2>Abonnés</h2>
+      <ul id="subscribers-list">
+        <!-- Les e-mails s'afficheront ici -->
+      </ul>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        onAuthStateChanged,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        onSnapshot,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // IMPORTANT : Ces variables sont fournies par l'environnement et doivent être utilisées telles quelles.
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfig = JSON.parse(
+        typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
+      );
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined" ? __initial_auth_token : "";
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      const userIdElement = document.getElementById("user-id");
+      const subscribersList = document.getElementById("subscribers-list");
+
+      let userId = "anonymous";
+
+      // Écouteur d'état d'authentification
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          userId = user.uid;
+          userIdElement.textContent = userId;
+
+          // Crée un lien vers la collection de données
+          const subscribersCollection = collection(
+            db,
+            `/artifacts/${appId}/public/data/subscribers`
+          );
+
+          // Écoute les changements en temps réel
+          onSnapshot(subscribersCollection, (querySnapshot) => {
+            subscribersList.innerHTML = "";
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const li = document.createElement("li");
+              li.textContent = data.email;
+              subscribersList.appendChild(li);
+            });
+          });
+        } else {
+          await signInWithCustomToken(auth, initialAuthToken);
+        }
+      });
+    </script>
+  </body>
+</html>
