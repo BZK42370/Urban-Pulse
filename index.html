@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Pulse - Inscrivez-vous</title>
+    <style>
+      /* Styles CSS de base pour un design épuré */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f5f7;
+        color: #4a4a4a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .container {
+        text-align: center;
+        padding: 2rem;
+        max-width: 600px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #004c6d;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .email-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+      .submit-button {
+        background-color: #2ecc71;
+        color: #ffffff;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .submit-button:hover {
+        background-color: #27ae60;
+      }
+      .success-message {
+        display: none;
+        color: #2ecc71;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Urban Pulse</h1>
+      <p>
+        Soyez le premier à découvrir comment nous simplifions la vie urbaine.
+        Inscrivez-vous pour rester informé des dernières nouvelles et de la date
+        de lancement.
+      </p>
+
+      <form id="subscribe-form" class="form-container">
+        <input
+          type="email"
+          id="email-input"
+          class="email-input"
+          placeholder="Votre adresse e-mail"
+          required
+        />
+        <button type="submit" class="submit-button">M'inscrire</button>
+      </form>
+
+      <p id="success-message" class="success-message">
+        Merci ! Votre inscription a été prise en compte.
+      </p>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // IMPORTANT : Ces variables sont fournies par l'environnement et doivent être utilisées telles quelles.
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfig = JSON.parse(
+        typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
+      );
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined" ? __initial_auth_token : "";
+
+      // Initialisation de Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      let userId = "anonymous";
+
+      // Fonction pour gérer l'authentification et l'envoi des données
+      async function handleFormSubmission() {
+        try {
+          // S'authentifier anonymement pour stocker les données
+          await signInAnonymously(auth);
+
+          // Récupérer l'ID utilisateur
+          if (auth.currentUser) {
+            userId = auth.currentUser.uid;
+          }
+
+          const userEmail = document.getElementById("email-input").value;
+
+          // Ajouter l'e-mail à la collection 'subscribers'
+          await addDoc(
+            collection(db, `/artifacts/${appId}/public/data/subscribers`),
+            {
+              email: userEmail,
+              timestamp: new Date(),
+            }
+          );
+
+          // Afficher le message de succès
+          document.getElementById("subscribe-form").style.display = "none";
+          document.getElementById("success-message").style.display = "block";
+        } catch (error) {
+          console.error("Erreur lors de l'enregistrement de l'e-mail:", error);
+          alert("Une erreur s'est produite. Veuillez réessayer.");
+        }
+      }
+
+      document
+        .getElementById("subscribe-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          handleFormSubmission();
+        });
+    </script>
+  </body>
+</html>
