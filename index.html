@@ -98,37 +98,20 @@
     <!-- Firebase SDK - Nécessaire pour la connexion à la base de données -->
     <!-- Dev fallback: définissez votre config Firebase ici en local (remplacez les valeurs) -->
     <script>
-<<<<<<< Updated upstream
       if (typeof window.__firebase_config === "undefined") {
         window.__firebase_config = JSON.stringify({
-          // REMPLACEZ par la configuration de votre projet Firebase
-          apiKey: "VOTRE_API_KEY",
-          authDomain: "VOTRE_PROJET.firebaseapp.com",
-          projectId: "VOTRE_PROJECT_ID",
-          storageBucket: "VOTRE_PROJET.appspot.com",
-          messagingSenderId: "VOTRE_SENDER_ID",
-          appId: "VOTRE_APP_ID",
+          apiKey: "AIzaSyDvTiliaW23M7CQZCgAUMpXSb-eebQR3uw",
+          authDomain: "urban-pulse-app.firebaseapp.com",
+          projectId: "urban-pulse-app",
+          storageBucket: "urban-pulse-app.firebasestorage.app",
+          messagingSenderId: "799918719987",
+          appId: "1:799918719987:web:9e09885ecd3757b8904886",
+          measurementId: "G-SM46HWC1QF",
         });
       }
       if (typeof window.__app_id === "undefined") {
         window.__app_id = "urban-pulse";
       }
-=======
-        if (typeof window.__firebase_config === 'undefined') {
-            window.__firebase_config = JSON.stringify({
-                // REMPLACEZ par la configuration de votre projet Firebase
-                apiKey: "VOTRE_API_KEY",
-                authDomain: "VOTRE_PROJET.firebaseapp.com",
-                projectId: "VOTRE_PROJECT_ID",
-                storageBucket: "VOTRE_PROJET.appspot.com",
-                messagingSenderId: "VOTRE_SENDER_ID",
-                appId: "VOTRE_APP_ID"
-            });
-        }
-        if (typeof window.__app_id === 'undefined') {
-            window.__app_id = 'urban-pulse';
-        }
->>>>>>> Stashed changes
     </script>
 
     <script type="module">
@@ -143,34 +126,12 @@
         addDoc,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-<<<<<<< Updated upstream
       // IMPORTANT : Ces variables sont fournies par l'environnement et doivent être utilisées telles quelles.
       const appId =
         typeof __app_id !== "undefined" ? __app_id : "default-app-id";
       const firebaseConfig = JSON.parse(
         typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
       );
-=======
-        // IMPORTANT : Ces variables sont fournies par l'environnement et doivent être utilisées telles quelles.
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-
-        // Vérifie que la config Firebase est bien fournie
-        if (!firebaseConfig || !firebaseConfig.projectId || firebaseConfig.projectId === 'VOTRE_PROJECT_ID') {
-            console.error('Configuration Firebase manquante ou incomplète. Définissez __firebase_config avec votre vrai projectId.');
-            alert('Configuration Firebase manquante ou incomplète. Renseignez votre config Firebase.');
-        }
-
-        // Initialisation de Firebase avec les variables de l'environnement
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // Gérer la soumission du formulaire
-        document.getElementById('subscribe-form').addEventListener('submit', async function(event) {
-            // Empêche le formulaire de recharger la page
-            event.preventDefault();
->>>>>>> Stashed changes
 
       // Vérifie que la config Firebase est bien fournie
       if (
