@@ -151,7 +151,11 @@
           // Crée un lien vers la collection de données
           const subscribersCollection = collection(
             db,
-            `/artifacts/${appId}/public/data/subscribers`
+            "artifacts",
+            appId,
+            "public",
+            "data",
+            "subscribers"
           );
 
           // Écoute les changements en temps réel
