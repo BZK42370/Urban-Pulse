@@ -75,7 +75,11 @@
 
     <!-- Dev fallback: définissez votre config Firebase ici en local (remplacez les valeurs) -->
     <script>
+<<<<<<< Updated upstream
       if (typeof window.__firebase_config === "undefined") {
+=======
+      if (typeof window.__firebase_config === 'undefined') {
+>>>>>>> Stashed changes
         window.__firebase_config = JSON.stringify({
           // REMPLACEZ par la configuration de votre projet Firebase
           apiKey: "VOTRE_API_KEY",
@@ -83,6 +87,7 @@
           projectId: "VOTRE_PROJECT_ID",
           storageBucket: "VOTRE_PROJET.appspot.com",
           messagingSenderId: "VOTRE_SENDER_ID",
+<<<<<<< Updated upstream
           appId: "VOTRE_APP_ID",
         });
       }
@@ -91,6 +96,16 @@
       }
       if (typeof window.__initial_auth_token === "undefined") {
         window.__initial_auth_token = "";
+=======
+          appId: "VOTRE_APP_ID"
+        });
+      }
+      if (typeof window.__app_id === 'undefined') {
+        window.__app_id = 'urban-pulse';
+      }
+      if (typeof window.__initial_auth_token === 'undefined') {
+        window.__initial_auth_token = '';
+>>>>>>> Stashed changes
       }
     </script>
 
@@ -120,6 +135,7 @@
       const initialAuthToken =
         typeof __initial_auth_token !== "undefined" ? __initial_auth_token : "";
 
+<<<<<<< Updated upstream
       if (
         !firebaseConfig ||
         !firebaseConfig.projectId ||
@@ -131,6 +147,11 @@
         alert(
           "Configuration Firebase manquante ou incomplète. Renseignez votre config Firebase."
         );
+=======
+      if (!firebaseConfig || !firebaseConfig.projectId || firebaseConfig.projectId === 'VOTRE_PROJECT_ID') {
+        console.error('Configuration Firebase manquante ou incomplète. Définissez __firebase_config avec votre vrai projectId.');
+        alert('Configuration Firebase manquante ou incomplète. Renseignez votre config Firebase.');
+>>>>>>> Stashed changes
       }
 
       const app = initializeApp(firebaseConfig);
@@ -172,10 +193,14 @@
               await signInAnonymously(auth);
             }
           } catch (e) {
+<<<<<<< Updated upstream
             console.warn(
               "Connexion avec jeton impossible, passage en anonyme.",
               e
             );
+=======
+            console.warn('Connexion avec jeton impossible, passage en anonyme.', e);
+>>>>>>> Stashed changes
             await signInAnonymously(auth);
           }
         }
