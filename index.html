@@ -167,7 +167,14 @@
 
             // Étape 2 : Ajouter l'e-mail à la collection 'subscribers'
             await addDoc(
-              collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'),
+              collection(
+                db,
+                "artifacts",
+                appId,
+                "public",
+                "data",
+                "subscribers"
+              ),
               {
                 email: userEmail,
                 timestamp: new Date(),
