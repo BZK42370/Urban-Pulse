@@ -214,7 +214,7 @@
           }
 
           // Auth anonyme requise
-          await signInAnonymously(auth);
+          const { user } = await signInAnonymously(auth);
 
           // Prépare un docRef pour obtenir un ID unique avant l'upload
           const docRef = doc(collection(db, "problems"));
@@ -239,8 +239,8 @@
             payload.imageUrl = imageUrl;
             payload.imagePath = imagePath;
           }
-          if (auth.currentUser && auth.currentUser.uid) {
-            payload.reporterUid = auth.currentUser.uid;
+          if (user && user.uid) {
+            payload.reporterUid = user.uid;
           }
 
           await setDoc(docRef, payload);
