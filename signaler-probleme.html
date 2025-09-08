@@ -228,15 +228,22 @@
             imageUrl = await getDownloadURL(ref);
           }
 
-          await setDoc(docRef, {
+          // Construire le payload en excluant les champs optionnels non utilisés
+          const payload = {
             type,
             description,
-            imageUrl,
-            imagePath,
             createdAt: serverTimestamp(),
-            reporterUid: auth.currentUser ? auth.currentUser.uid : null,
             status: "new",
-          });
+          };
+          if (imageUrl && imagePath) {
+            payload.imageUrl = imageUrl;
+            payload.imagePath = imagePath;
+          }
+          if (auth.currentUser && auth.currentUser.uid) {
+            payload.reporterUid = auth.currentUser.uid;
+          }
+
+          await setDoc(docRef, payload);
 
           form.reset();
           showSuccess();
@@ -255,4 +262,3 @@
     </script>
   </body>
   </html>
-
