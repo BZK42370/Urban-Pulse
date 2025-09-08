@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Pulse - Inscription Professionnels</title>
+    <style>
+      :root {
+        --up-primary: #004c6d; /* Bleu-Canard */
+        --up-accent: #2ecc71; /* Vert Vif */
+        --up-neutral-100: #f2f5f7; /* Gris très clair */
+        --up-neutral-800: #4a4a4a; /* Gris foncé */
+        --white: #ffffff;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--up-neutral-100);
+        color: var(--up-neutral-800);
+        display: grid;
+        place-items: center;
+      }
+
+      .card {
+        width: min(92vw, 720px);
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: clamp(16px, 3.5vw, 32px);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .title {
+        margin: 0 0 6px 0;
+        color: var(--up-primary);
+        font-size: clamp(24px, 3.2vw, 32px);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--up-neutral-800);
+        opacity: 0.9;
+        font-size: clamp(14px, 2.2vw, 16px);
+      }
+
+      form {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 640px) {
+        .row-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--up-primary);
+        margin-bottom: 6px;
+        display: inline-block;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #fbfdff;
+        color: var(--up-neutral-800);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--up-primary);
+        box-shadow: 0 0 0 3px rgba(0, 76, 109, 0.15);
+      }
+
+      textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      .actions {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        appearance: none;
+        border: none;
+        background: var(--up-accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 12px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.04s ease, opacity 0.15s ease,
+          box-shadow 0.2s ease;
+        box-shadow: 0 8px 18px rgba(46, 204, 113, 0.25);
+      }
+      .btn-primary:hover {
+        opacity: 0.95;
+      }
+      .btn-primary:active {
+        transform: translateY(1px);
+      }
+
+      .note {
+        font-size: 0.9rem;
+        color: #5f6b76;
+      }
+
+      .success {
+        display: none;
+        margin-top: 8px;
+        padding: 12px 14px;
+        background: #ecfdf3;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        border-radius: 10px;
+        font-weight: 600;
+      }
+
+      .error {
+        display: none;
+        margin-top: 8px;
+        padding: 12px 14px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #7f1d1d;
+        border-radius: 10px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card" role="main">
+      <header class="header">
+        <h1 class="title">Inscription des professionnels</h1>
+        <p class="subtitle">Rejoignez Urban Pulse et présentez vos services.</p>
+      </header>
+
+      <form id="pro-form" novalidate>
+        <div class="row-2">
+          <div>
+            <label for="fullName">Nom et Prénom</label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              autocomplete="name"
+              placeholder="Ex. Jeanne Martin"
+              required
+            />
+          </div>
+          <div>
+            <label for="email">E-mail</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="exemple@domaine.com"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="specialty">Spécialité</label>
+          <select id="specialty" name="specialty" required>
+            <option value="" disabled selected>
+              Choisissez une spécialité
+            </option>
+            <option>Plomberie</option>
+            <option>Électricité</option>
+            <option>Serrurerie</option>
+            <option>Maçonnerie</option>
+            <option>Peinture</option>
+            <option>Menuiserie</option>
+            <option>Jardinage</option>
+            <option>Nettoyage</option>
+            <option>Informatique</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="description">Description des services</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Présentez brièvement votre activité (expérience, zone d'intervention, etc.)"
+            required
+          ></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">M'inscrire</button>
+          <span class="note">Tous les champs sont requis.</span>
+        </div>
+
+        <div id="form-success" class="success" role="status">
+          Merci ! Votre profil a été enregistré avec succès.
+        </div>
+        <div id="form-error" class="error" role="alert"></div>
+      </form>
+    </main>
+
+    <!-- Fallback local: définissez votre config Firebase si non fournie par l'environnement -->
+    <script>
+      if (typeof window.__firebase_config === "undefined") {
+        window.__firebase_config = JSON.stringify({
+          apiKey: "AIzaSyDvTiliaW23M7CQZCgAUMpXSb-eebQR3uw",
+          authDomain: "urban-pulse-app.firebaseapp.com",
+          projectId: "urban-pulse-app",
+          storageBucket: "urban-pulse-app.appspot.com",
+          messagingSenderId: "799918719987",
+          appId: "1:799918719987:web:9e09885ecd3757b8904886",
+          measurementId: "G-SM46HWC1QF",
+        });
+      }
+    </script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      const firebaseConfig = JSON.parse(
+        typeof window.__firebase_config !== "undefined"
+          ? window.__firebase_config
+          : "{}"
+      );
+
+      // Validation basique de la config
+      if (!firebaseConfig || !firebaseConfig.projectId) {
+        console.error("Configuration Firebase manquante ou invalide.");
+      }
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const form = document.getElementById("pro-form");
+      const successEl = document.getElementById("form-success");
+      const errorEl = document.getElementById("form-error");
+
+      function showError(message) {
+        errorEl.textContent = message;
+        errorEl.style.display = "block";
+        successEl.style.display = "none";
+      }
+
+      function showSuccess() {
+        errorEl.style.display = "none";
+        successEl.style.display = "block";
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const specialty = document.getElementById("specialty").value.trim();
+        const description = document.getElementById("description").value.trim();
+
+        // Validation côté client
+        if (!fullName || !email || !specialty || !description) {
+          return showError("Merci de compléter tous les champs.");
+        }
+        // Validation très simple d'email (le type="email" couvre déjà la plupart des cas)
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return showError("Adresse e-mail invalide.");
+        }
+
+        try {
+          // Auth anonyme requise avant écriture
+          await signInAnonymously(auth);
+
+          // Écriture dans la collection top-level 'professionals'
+          await addDoc(collection(db, "professionals"), {
+            fullName,
+            email,
+            specialty,
+            description,
+            createdAt: serverTimestamp(),
+          });
+
+          form.reset();
+          showSuccess();
+        } catch (err) {
+          console.error("Erreur d'envoi formulaire pro:", err);
+          showError("Une erreur est survenue. Merci de réessayer.");
+        }
+      });
+    </script>
+  </body>
+</html>
