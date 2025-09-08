@@ -315,6 +315,12 @@
           // Auth anonyme requise avant écriture
           await signInAnonymously(auth);
 
+          // Logs projet / uid pour debug
+          try {
+            console.log("projectId:", app.options.projectId);
+            console.log("uid:", (await auth.currentUser)?.uid);
+          } catch (e) { /* ignore */ }
+
           // Écriture dans la collection top-level 'professionals'
           await addDoc(collection(db, "professionals"), {
             fullName,

@@ -165,6 +165,12 @@
             // Étape 1 : S'authentifier anonymement pour stocker les données
             await signInAnonymously(auth);
 
+            // Logs projet / uid pour debug
+            try {
+              console.log("projectId:", app.options.projectId);
+              console.log("uid:", (await auth.currentUser)?.uid);
+            } catch (e) { /* ignore */ }
+
             // Étape 2 : Ajouter l'e-mail à la collection 'subscribers'
             await addDoc(
               collection(

@@ -245,10 +245,16 @@
           let wrote = false;
           try {
             const payload = { ...basePayload, ...(uploaded || {}) };
+            console.log("projectId:", app.options.projectId);
+            console.log("uid:", (await auth.currentUser)?.uid);
+            console.log("payload keys:", Object.keys(payload));
             await setDoc(docRef, payload);
             wrote = true;
           } catch (uploadFirstErr) {
             console.warn("Upload avant doc refusé, tentative 2 étapes (doc -> upload -> update)", uploadFirstErr);
+            console.log("projectId:", app.options.projectId);
+            console.log("uid:", (await auth.currentUser)?.uid);
+            console.log("payload keys:", Object.keys(basePayload));
             await setDoc(docRef, basePayload);
             if (file) {
               uploaded = uploaded || (await tryUploadImage(docRef.id, file));
