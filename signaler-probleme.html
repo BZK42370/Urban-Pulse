@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Pulse - Signaler un problème</title>
+    <style>
+      :root {
+        --up-primary: #004c6d;  /* Bleu-Canard */
+        --up-accent: #2ecc71;   /* Vert Vif */
+        --up-neutral-100: #f2f5f7; /* Gris très clair */
+        --up-neutral-800: #4a4a4a; /* Gris foncé */
+        --white: #ffffff;
+      }
+
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--up-neutral-100);
+        color: var(--up-neutral-800);
+        display: grid;
+        place-items: center;
+      }
+
+      .card {
+        width: min(92vw, 720px);
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        padding: clamp(16px, 3.5vw, 32px);
+      }
+
+      .header { text-align: center; margin-bottom: 12px; }
+      .title {
+        color: var(--up-primary);
+        margin: 0 0 6px 0;
+        font-size: clamp(24px, 3.2vw, 32px);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+      }
+      .subtitle { margin: 0; opacity: 0.9; font-size: clamp(14px,2.2vw,16px); }
+
+      form { margin-top: 16px; display: grid; gap: 14px; }
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--up-primary);
+        margin-bottom: 6px;
+        display: inline-block;
+      }
+
+      select, textarea, input[type="file"] {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #fbfdff;
+        color: var(--up-neutral-800);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      select:focus, textarea:focus, input[type="file"]:focus {
+        border-color: var(--up-primary);
+        box-shadow: 0 0 0 3px rgba(0,76,109,0.15);
+      }
+      textarea { min-height: 120px; resize: vertical; }
+
+      .actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .btn-primary {
+        appearance: none; border: none; cursor: pointer;
+        background: var(--up-accent); color: #fff; font-weight: 700; font-size: 1rem;
+        padding: 12px 18px; border-radius: 10px;
+        box-shadow: 0 8px 18px rgba(46,204,113,0.25);
+        transition: transform 0.04s ease, opacity 0.15s ease;
+      }
+      .btn-primary:hover { opacity: 0.95; }
+      .btn-primary:active { transform: translateY(1px); }
+      .btn-primary[disabled] { opacity: 0.65; cursor: not-allowed; }
+
+      .note { font-size: 0.9rem; color: #5f6b76; }
+
+      .success, .error {
+        display: none; margin-top: 8px; padding: 12px 14px; border-radius: 10px; font-weight: 600;
+      }
+      .success { background: #ecfdf3; border: 1px solid #a7f3d0; color: #065f46; }
+      .error { background: #fef2f2; border: 1px solid #fecaca; color: #7f1d1d; }
+    </style>
+  </head>
+  <body>
+    <main class="card" role="main">
+      <header class="header">
+        <h1 class="title">Signaler un problème</h1>
+        <p class="subtitle">Aidez-nous à améliorer votre quartier.</p>
+      </header>
+
+      <form id="problem-form" novalidate>
+        <div>
+          <label for="problemType">Type de problème</label>
+          <select id="problemType" name="problemType" required>
+            <option value="" disabled selected>Choisissez un type</option>
+            <option>Fuite d'eau</option>
+            <option>Nid de poule</option>
+            <option>Graffitis</option>
+            <option>Éclairage défectueux</option>
+            <option>Déchets sauvages</option>
+            <option>Mobilier urbain cassé</option>
+            <option>Bruit</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="description">Description du problème</label>
+          <textarea id="description" name="description" placeholder="Expliquez brièvement le problème et l'emplacement" required></textarea>
+        </div>
+
+        <div>
+          <label for="image">Photo (optionnel)</label>
+          <input id="image" name="image" type="file" accept="image/*" />
+          <div class="note">Formats image uniquement. Taille conseillée &lt; 10 Mo.</div>
+        </div>
+
+        <div class="actions">
+          <button id="submitBtn" class="btn-primary" type="submit">Envoyer</button>
+          <span class="note">Le bouton est en vert vif.</span>
+        </div>
+
+        <div id="form-success" class="success" role="status">
+          Merci ! Votre signalement a été envoyé avec succès.
+        </div>
+        <div id="form-error" class="error" role="alert"></div>
+      </form>
+    </main>
+
+    <!-- Fallback local: définissez votre config Firebase si non fournie par l'environnement -->
+    <script>
+      if (typeof window.__firebase_config === "undefined") {
+        window.__firebase_config = JSON.stringify({
+          apiKey: "AIzaSyDvTiliaW23M7CQZCgAUMpXSb-eebQR3uw",
+          authDomain: "urban-pulse-app.firebaseapp.com",
+          projectId: "urban-pulse-app",
+          storageBucket: "urban-pulse-app.appspot.com",
+          messagingSenderId: "799918719987",
+          appId: "1:799918719987:web:9e09885ecd3757b8904886",
+          measurementId: "G-SM46HWC1QF",
+        });
+      }
+    </script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        setDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      import {
+        getStorage,
+        ref as storageRef,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+      const firebaseConfig = JSON.parse(
+        typeof window.__firebase_config !== "undefined" ? window.__firebase_config : "{}"
+      );
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      const form = document.getElementById("problem-form");
+      const successEl = document.getElementById("form-success");
+      const errorEl = document.getElementById("form-error");
+      const submitBtn = document.getElementById("submitBtn");
+
+      function showError(message) {
+        errorEl.textContent = message;
+        errorEl.style.display = "block";
+        successEl.style.display = "none";
+      }
+      function showSuccess(message) {
+        successEl.textContent = message || "Merci ! Votre signalement a été envoyé avec succès.";
+        errorEl.style.display = "none";
+        successEl.style.display = "block";
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        const originalLabel = submitBtn.textContent;
+        submitBtn.textContent = "Envoi...";
+        try {
+          const type = document.getElementById("problemType").value.trim();
+          const description = document.getElementById("description").value.trim();
+          const fileInput = document.getElementById("image");
+          const file = fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+
+          if (!type || !description) {
+            return showError("Merci de choisir un type et d'ajouter une description.");
+          }
+          if (file && !file.type.startsWith("image/")) {
+            return showError("Le fichier doit être une image.");
+          }
+          if (file && file.size > 10 * 1024 * 1024) { // 10 Mo
+            return showError("Image trop volumineuse (&gt; 10 Mo).");
+          }
+
+          // Auth anonyme requise
+          await signInAnonymously(auth);
+
+          // Prépare un docRef pour obtenir un ID unique avant l'upload
+          const docRef = doc(collection(db, "problems"));
+
+          let imageUrl = null;
+          let imagePath = null;
+          if (file) {
+            imagePath = `problems/${docRef.id}/${encodeURIComponent(file.name)}`;
+            const ref = storageRef(storage, imagePath);
+            await uploadBytes(ref, file, { contentType: file.type });
+            imageUrl = await getDownloadURL(ref);
+          }
+
+          await setDoc(docRef, {
+            type,
+            description,
+            imageUrl,
+            imagePath,
+            createdAt: serverTimestamp(),
+            reporterUid: auth.currentUser ? auth.currentUser.uid : null,
+            status: "new",
+          });
+
+          form.reset();
+          showSuccess();
+        } catch (err) {
+          console.error("Erreur d'envoi du problème:", err);
+          if (String(err).includes("permissions")) {
+            showError("Permissions Firestore/Storage insuffisantes. Vérifiez les règles et l'auth anonyme.");
+          } else {
+            showError("Une erreur est survenue. Merci de réessayer.");
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
+      });
+    </script>
+  </body>
+  </html>
+
